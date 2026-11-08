@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quando uma propriedade falha — Cálculo II</title>
+  <meta name="description" content="Modelagem computacional de funções de duas variáveis: domínio, limite, derivada e plano tangente, com os pontos onde cada hipótese deixa de valer.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%2314233b%27/%3E%3Cpath d=%27M16 6l8 10-8 10-8-10z%27 fill=%27%23c2185b%27/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <b>Cálculo II</b>
+  <nav aria-label="Questões">
+    <a href="#q1">Questão 1</a>
+    <a href="#q2">Questão 2</a>
+    <a href="#q3">Questão 3</a>
+    <a href="#q4">Questão 4</a>
+    <a href="#resumo">Resumo</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ======================= ABERTURA ======================= -->
+<section class="hero" aria-labelledby="titulo">
+  <div>
+    <h1 id="titulo">Quando uma propriedade falha</h1>
+    <p class="lede">Domínio, limite, derivada e plano tangente de funções de duas variáveis, com atenção especial aos pontos onde cada hipótese deixa de valer.</p>
+    <dl class="meta">
+      <dt>Instituição</dt><dd>Universidade Federal do Amazonas (UFAM)</dd>
+      <dt>Curso</dt><dd>Engenharia de Software</dd>
+      <dt>Disciplina</dt><dd>Cálculo II</dd>
+      <dt>Turma</dt><dd>Engenharia de Software</dd>
+      <dt>Integrantes</dt><dd id="meta-integrantes">Rafael Emanuel<br>Luiz Nery<br>Antonio Lucas<br>Breno Augusto<br>Caio Martins<br>Victor Kossmann<br>Vitor Hugo</dd>
+    </dl>
+  </div>
+  <div class="hero-plot-wrap">
+    <div id="hero-plot" class="hero-plot" role="img" aria-label="Superfície z = xy dividido pela raiz de x ao quadrado mais y ao quadrado, com a origem destacada"></div>
+    <p class="hero-note">A superfície de xy/√(x²+y²): tem as duas derivadas parciais na origem, mas não é diferenciável ali. Arraste para girar.</p>
+  </div>
+</section>
+
+<!-- ======================= QUESTÃO 1 ======================= -->
+<section class="question" id="q1" aria-labelledby="q1-titulo">
+  <header class="q-head">
+    <h2 id="q1-titulo"><span class="q-num">1</span>Domínio, imagem e curvas de nível <span class="q-pts">2,0 pontos</span></h2>
+    <p class="q-guide">Por que nem todo ponto de $\mathbb{R}^2$ pode ser usado como entrada e nem todo número real aparece como saída?</p>
+  </header>
+
+  <div class="lab">
+    <!-- Bancada interativa -->
+    <div class="stage" id="q1-stage">
+      <div class="stage-bar">
+        <div class="seg" id="q1-fn" role="tablist" aria-label="Função">
+          <button role="tab" data-fn="f1" aria-selected="true">f<sub>1</sub></button>
+          <button role="tab" data-fn="f2" aria-selected="false">f<sub>2</sub></button>
+          <button role="tab" data-fn="f3" aria-selected="false">f<sub>3</sub></button>
+        </div>
+        <div class="seg" id="q1-view" role="tablist" aria-label="Vista">
+          <button role="tab" data-view="domain" aria-selected="true">Domínio</button>
+          <button role="tab" data-view="surface" aria-selected="false">Superfície</button>
+          <button role="tab" data-view="level" aria-selected="false">Curvas de nível</button>
+        </div>
+      </div>
+      <div class="stage-formula" id="q1-formula"></div>
+      <div class="stage-plot">
+        <div class="plot" id="q1-p-domain"></div>
+        <div class="plot" id="q1-p-surface" hidden></div>
+        <div class="plot" id="q1-p-level" hidden></div>
+      </div>
+      <div class="stage-legend" id="q1-legend"></div>
+      <div class="stage-dock">
+      <div class="stage-read">
+        <div class="read" id="q1-read-point" aria-live="polite"></div>
+        <div class="read" id="q1-read-level" aria-live="polite" hidden></div>
+      </div>
+      <div class="stage-ctl">
+        <div class="ctl" data-for="domain surface level">
+          <div class="ctl-row">
+            <span class="ctl-name">Ponto (a, b)</span>
+            <label>a <input class="num" id="q1-a" type="number" step="0.05" min="-4.2" max="4.2" value="1"></label>
+            <label>b <input class="num" id="q1-b" type="number" step="0.05" min="-4.2" max="4.2" value="1"></label>
+            <span class="presets" id="q1-pt-presets"></span>
+          </div>
+        </div>
+        <div class="ctl" data-for="surface level">
+          <div class="ctl-row">
+            <span class="ctl-name">Nível c</span>
+            <input id="q1-c" type="range" step="0.01" min="-1" max="4" value="1.5" aria-label="Valor de c">
+            <output class="c-out" id="q1-c-out">1,5</output>
+          </div>
+          <div class="ctl-row">
+            <span class="presets" id="q1-c-presets"></span>
+          </div>
+          <div id="q1-strip-box">
+            <div class="ctl-name" style="margin-top:.4rem"><span id="q1-image"></span></div>
+            <div id="q1-strip"></div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <!-- Respostas (texto fixo) -->
+    <div class="narr">
+      <p class="hint">Clique em um trecho destacado, ou em “Ver no gráfico”, para mostrá-lo no gráfico fixo.</p>
+
+      <article class="req">
+        <h3><span class="rn">1</span>Domínio e fronteira</h3>
+        <p>O domínio é o conjunto de pontos em que a expressão faz sentido nos reais. Cada função impõe uma condição, e ela vem da operação que está sendo feita.</p>
+        <div class="fnrow" data-stage="fn=f1;view=domain">
+          <span class="fl">$f_1$</span>
+          <div>
+            <p>A raiz quadrada real exige radicando não negativo: $9-x^2-y^2\ge 0$, isto é, $x^2+y^2\le 9$.</p>
+            <p>$D_1$ é o <b>disco fechado</b> de centro na origem e raio 3. A fronteira <b>pertence</b> ao domínio, porque $\sqrt{0}=0$ está definido.</p>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f2;view=domain">
+          <span class="fl">$f_2$</span>
+          <div>
+            <p>O logaritmo real exige argumento estritamente positivo: $4-x^2-y^2>0$, isto é, $x^2+y^2<4$.</p>
+            <p>$D_2$ é o <b>disco aberto</b> de raio 2. A fronteira <b>não pertence</b> ao domínio, porque $\ln 0$ não existe.</p>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f3;view=domain">
+          <span class="fl">$f_3$</span>
+          <div>
+            <p>A divisão exige denominador não nulo: $x^2+y^2-1\ne 0$, isto é, $x^2+y^2\ne 1$.</p>
+            <p>$D_3=\mathbb{R}^2\setminus\{x^2+y^2=1\}$: o plano inteiro menos a circunferência unitária. É formado por duas peças separadas, o disco aberto de raio 1 e o exterior da circunferência.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">2</span>Imagem e superfície</h3>
+        <p>A imagem se obtém escrevendo $f$ como função de $t=x^2+y^2$, que percorre todo o intervalo permitido pelo domínio, e acompanhando o resultado.</p>
+        <div class="fnrow" data-stage="fn=f1;view=surface">
+          <span class="fl">$f_1$</span>
+          <div>
+            <p>Com $t\in[0,9]$, o radicando $9-t$ percorre $[0,9]$ e a raiz percorre $[0,3]$. Todo valor $c\in[0,3]$ é atingido: $f_1\big(\sqrt{9-c^2},0\big)=c$.</p>
+            <p>$\operatorname{Im}(f_1)=[0,3]$. A superfície $z=\sqrt{9-x^2-y^2}$ satisfaz $x^2+y^2+z^2=9$ com $z\ge 0$: é o <b>hemisfério superior</b> da esfera de raio 3.</p>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f2;view=surface">
+          <span class="fl">$f_2$</span>
+          <div>
+            <p>Com $t\in[0,4)$, o argumento $4-t$ percorre $(0,4]$. Como $\ln$ é crescente e contínua, a imagem é $(-\infty,\ln 4]$. O máximo $\ln 4$ ocorre só na origem.</p>
+            <p>Perto da fronteira o argumento tende a $0^+$ e $z\to-\infty$: a superfície desce sem limite, como uma taça com assíntota vertical sobre a circunferência $x^2+y^2=4$.</p>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f3;view=surface">
+          <span class="fl">$f_3$</span>
+          <div>
+            <p>Seja $u=x^2+y^2-1$. Dentro do disco unitário, $u\in[-1,0)$ e $1/u\in(-\infty,-1]$. Fora dele, $u\in(0,\infty)$ e $1/u\in(0,\infty)$.</p>
+            <p>$\operatorname{Im}(f_3)=(-\infty,-1]\cup(0,\infty)$. A superfície tem <b>duas peças</b> separadas pela assíntota vertical em $x^2+y^2=1$. Dentro, parte de $z=-1$ na origem e desce a $-\infty$. Fora, vem de $+\infty$ e decresce até $0$ sem atingi-lo. No gráfico, as alturas acima de 5 em módulo são cortadas.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">3</span>Curvas de nível</h3>
+        <p>A curva de nível $c$ é o conjunto $\{(x,y)\in D: f(x,y)=c\}$. Como as três funções dependem só de $x^2+y^2$, resolver $f=c$ dá uma circunferência centrada na origem. Mexa em $c$ no controle do gráfico.</p>
+        <div class="fnrow" data-stage="fn=f1;view=level">
+          <span class="fl">$f_1$</span>
+          <div>
+            <p>$\sqrt{9-x^2-y^2}=c \iff x^2+y^2=9-c^2$, com $c\in[0,3]$. O raio é $\sqrt{9-c^2}$ e diminui quando $c$ sobe.</p>
+            <button class="try" data-stage="fn=f1;view=level;c=3">c = 3: um ponto</button>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f2;view=level">
+          <span class="fl">$f_2$</span>
+          <div>
+            <p>$\ln(4-x^2-y^2)=c \iff x^2+y^2=4-e^{c}$, com $c\le\ln 4$. O raio é $\sqrt{4-e^c}$. Quando $c\to-\infty$ o raio tende a 2 sem alcançá-lo.</p>
+            <button class="try" data-stage="fn=f2;view=level;c=-4">c = −4: quase na fronteira</button>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f3;view=level">
+          <span class="fl">$f_3$</span>
+          <div>
+            <p>$\dfrac{1}{x^2+y^2-1}=c \iff x^2+y^2=1+\dfrac1c$. Para $c>0$ a circunferência fica fora do círculo unitário. Para $c\le -1$ fica dentro, com $c=-1$ dando só a origem.</p>
+            <button class="try" data-stage="fn=f3;view=level;c=-3">c = −3: dentro</button>
+            <button class="try" data-stage="fn=f3;view=level;c=0.5">c = 0,5: fora</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">4</span>Um ponto $(a,b)$ pertence ao domínio?</h3>
+        <p>Escolha o ponto no gráfico, clicando ou arrastando sobre o plano, ou digite $a$ e $b$. O programa substitui os valores na condição e mostra qual delas falhou. Alguns pontos representativos:</p>
+        <div data-stage="fn=f1;view=domain;a=3;b=0">
+        <table class="ex">
+          <thead><tr><th>$(a,b)$</th><th>$f_1$</th><th>$f_2$</th><th>$f_3$</th></tr></thead>
+          <tbody>
+            <tr><td>$(0,0)$</td><td><span class="mk mk-ok">3</span></td><td><span class="mk mk-ok">$\ln 4\approx1{,}386$</span></td><td><span class="mk mk-ok">$-1$</span></td></tr>
+            <tr><td>$(1,0)$</td><td><span class="mk mk-ok">$\sqrt8\approx2{,}828$</span></td><td><span class="mk mk-ok">$\ln 3\approx1{,}099$</span></td><td><span class="mk mk-fail">falha</span><small>denominador 0</small></td></tr>
+            <tr><td>$(2,0)$</td><td><span class="mk mk-ok">$\sqrt5\approx2{,}236$</span></td><td><span class="mk mk-fail">falha</span><small>$\ln 0$</small></td><td><span class="mk mk-ok">$1/3$</span></td></tr>
+            <tr><td>$(3,0)$</td><td><span class="mk mk-ok">0</span><small>fronteira incluída</small></td><td><span class="mk mk-fail">falha</span><small>$\ln(-5)$</small></td><td><span class="mk mk-ok">$1/8$</span></td></tr>
+            <tr><td>$(3,3)$</td><td><span class="mk mk-fail">falha</span><small>radicando $-9$</small></td><td><span class="mk mk-fail">falha</span><small>$\ln(-14)$</small></td><td><span class="mk mk-ok">$1/17$</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p>Um ponto fora do domínio não é um defeito do gráfico: a expressão simplesmente não define um número real ali, então não existe $z$ correspondente.</p>
+        <button class="try" data-stage="fn=f1;view=domain;a=3;b=3">f₁ em (3, 3)</button>
+        <button class="try" data-stage="fn=f2;view=domain;a=2;b=0">f₂ em (2, 0)</button>
+        <button class="try" data-stage="fn=f3;view=domain;a=1;b=0">f₃ em (1, 0)</button>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">5</span>Valores de $c$ sem curva de nível</h3>
+        <p>O nível $c$ é a imagem inversa $f^{-1}(\{c\})$. Ela é vazia exatamente quando $c\notin\operatorname{Im}(f)$. Nesses casos, o plano $z=c$ passa sem tocar a superfície.</p>
+        <div class="fnrow" data-stage="fn=f1;view=surface;c=4">
+          <span class="fl">$f_1$</span>
+          <div>
+            <p>Sem curva para $c<0$ ou $c>3$. Para $c>3$ a equação daria $x^2+y^2=9-c^2<0$.</p>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f2;view=surface;c=1.8">
+          <span class="fl">$f_2$</span>
+          <div>
+            <p>Sem curva para $c>\ln 4\approx1{,}386$, pois $e^c>4$ daria $x^2+y^2<0$.</p>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f3;view=surface;c=-0.5">
+          <span class="fl">$f_3$</span>
+          <div>
+            <p>Sem curva para $c=0$ (uma fração de numerador 1 nunca é 0) e para $-1&lt;c&lt;0$ (o denominador nunca fica entre $-1$ e $0$, porque $x^2+y^2-1\ge-1$).</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3>Resposta à pergunta orientadora</h3>
+        <div class="answer">
+          <p class="answer-title">Entradas e saídas têm restrições diferentes.</p>
+          <p>Nem todo ponto serve de entrada porque cada operação tem uma condição própria: raiz real pede radicando $\ge0$, logaritmo pede argumento $>0$, divisão pede denominador $\ne0$. Fora disso a expressão não define um número real.</p>
+          <p>Nem todo real aparece como saída porque a expressão só consegue produzir certos valores: $\sqrt{\cdot}\ge0$, $\ln(4-t)\le\ln4$, e $1/u$ com $u\ge-1$ nunca cai em $(-1,0]$. Um $c$ fora da imagem tem nível vazio.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================= QUESTÕES 2–4 (em construção) ======================= -->
+<section class="question" id="q2" aria-labelledby="q2-titulo">
+  <header class="q-head">
+    <h2 id="q2-titulo"><span class="q-num">2</span>Limites e continuidade <span class="q-pts">2,5 pontos</span></h2>
+    <p class="q-guide">Qual é a diferença entre existir limite, existir valor da função e haver continuidade?</p>
+  </header>
+
+  <div class="lab">
+    <div class="stage" id="q2-stage">
+      <div class="stage-bar">
+        <div class="seg" id="q2-fn" role="tablist" aria-label="Função">
+          <button role="tab" data-fn="f1" aria-selected="true">f<sub>1</sub></button>
+          <button role="tab" data-fn="f2" aria-selected="false">f<sub>2</sub></button>
+          <button role="tab" data-fn="f3" aria-selected="false">f<sub>3</sub></button>
+          <button role="tab" data-fn="f4" aria-selected="false" title="Exemplo extra, fora do enunciado">f<sub>4</sub> extra</button>
+        </div>
+        <div class="seg" id="q2-view" role="tablist" aria-label="Vista">
+          <button role="tab" data-view="surface" aria-selected="true">Superfície</button>
+          <button role="tab" data-view="plane" aria-selected="false">Plano xy</button>
+          <button role="tab" data-view="values" aria-selected="false">Valores</button>
+        </div>
+      </div>
+      <div class="stage-formula" id="q2-formula"></div>
+      <div class="stage-plot">
+        <div class="plot" id="q2-p-surface"></div>
+        <div class="plot" id="q2-p-plane" hidden></div>
+        <div class="plot" id="q2-p-values" hidden></div>
+      </div>
+      <div class="stage-dock">
+        <div class="stage-read">
+          <div class="read" id="q2-read-limit" aria-live="polite"></div>
+          <div class="read" id="q2-read-cont" aria-live="polite"></div>
+          <div class="read" id="q2-read-vals" aria-live="polite"></div>
+        </div>
+        <div class="stage-ctl">
+          <div class="ctl">
+            <div class="ctl-row"><span class="ctl-name">Trajetórias</span><div class="pchips" id="q2-paths"></div></div>
+            <div class="ctl-grid">
+              <div class="ctl-row">
+                <span class="ctl-name">Aproximação</span>
+                <input id="q2-u" type="range" min="0" max="3" step="0.01" value="1" aria-label="Distância s até a origem, em escala logarítmica">
+                <output class="c-out" id="q2-u-out" style="min-width:4.6rem">s = 0,1</output>
+              </div>
+              <div class="ctl-row" id="q2-row-v0">
+                <span class="ctl-name">f(0, 0)</span>
+                <input id="q2-v0" type="range" min="-1" max="3" step="0.01" value="0" aria-label="Valor atribuído a f(0,0)">
+                <output class="c-out" id="q2-v0-out">0</output>
+              </div>
+              <div class="ctl-row" id="q2-row-m" hidden>
+                <span class="ctl-name">Inclinação m</span>
+                <input id="q2-m" type="range" min="-3" max="3" step="0.1" value="1" aria-label="Inclinação m da reta">
+                <output class="c-out" id="q2-m-out">1</output>
+              </div>
+            </div>
+            <div class="ctl-row"><span class="presets" id="q2-v0-presets"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="narr">
+      <p class="hint">Clique em um trecho destacado, ou em “Ver no gráfico”, para mostrá-lo no gráfico fixo.</p>
+
+      <article class="req">
+        <h3><span class="rn">1</span>Superfície e trajetórias até a origem</h3>
+        <p>Cada curva colorida é uma trajetória que leva à origem e sobe até a superfície. O marcador mostra o ponto atual: mexa na aproximação $s$ para vê-lo se aproximar. O círculo vazado marca o valor do limite, quando ele existe, e o ponto cheio marca $f(0,0)$.</p>
+        <div class="fnrow" data-stage="fn=f1;view=surface;paths=ax,ay,ln,p1,sp;m=1;u=1">
+          <span class="fl">$f_1$</span>
+          <div><p>Todas as trajetórias chegam à mesma altura, $0$: as curvas se juntam na origem e a superfície fecha sem buraco.</p></div>
+        </div>
+        <div class="fnrow" data-stage="fn=f2;view=surface;paths=ax,ay,ln,p1,sp;m=1;u=1">
+          <span class="fl">$f_2$</span>
+          <div><p>Em polares, $f_2=\tfrac12\sin2\theta$: a altura não depende de $r$. Cada reta que sai da origem fica numa altura própria, e a espiral oscila entre $-\tfrac12$ e $\tfrac12$ para sempre. As curvas <b>não</b> se juntam.</p></div>
+        </div>
+        <div class="fnrow" data-stage="fn=f3;view=surface;paths=ax,ay,ln,p1;m=1;u=1">
+          <span class="fl">$f_3$</span>
+          <div><p>A superfície é suave e passa pela altura $0$ sobre a origem, mas o enunciado põe $f_3(0,0)=2$. O ponto cheio fica solto, bem acima do círculo vazado, que marca onde a superfície chegaria.</p></div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">2</span>O limite existe?</h3>
+        <p>Se $\lim_{(x,y)\to(0,0)}f=L$, então $f$ tende a $L$ ao longo de <i>toda</i> trajetória que chega à origem. A aba <b>Valores</b> mostra $f$ ao longo de cada trajetória em função da distância à origem.</p>
+        <div class="fnrow" data-stage="fn=f1;view=values;paths=ax,ay,ln,p1,sp;m=1;u=1">
+          <span class="fl">$f_1$</span>
+          <div>
+            <p>Em polares, $f_1=r\sin\theta\cos^2\theta$. Como $\dfrac{x^2}{x^2+y^2}\le1$, vale $|f_1|\le|y|\le\sqrt{x^2+y^2}$.</p>
+            <p><b>Prova ($\varepsilon$–$\delta$).</b> Dado $\varepsilon>0$, tome $\delta=\varepsilon$. Se $0&lt;\sqrt{x^2+y^2}&lt;\delta$, então $|f_1(x,y)-0|&lt;\varepsilon$. Logo $\lim f_1=0$.</p>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f2;view=values;paths=ax,ln,p1;m=1;u=1">
+          <span class="fl">$f_2$</span>
+          <div>
+            <p>Ao longo de $y=mx$, $x\ne0$: $f_2(x,mx)=\dfrac{mx^2}{x^2+m^2x^2}=\dfrac{m}{1+m^2}$.</p>
+            <p>Com $m=0$ o valor é $0$ e com $m=1$ é $\tfrac12$. Se o limite existisse, todas as trajetórias teriam de dar o mesmo valor. <b>O limite não existe.</b></p>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f3;view=values;paths=ax,ay,ln,sp;m=1;u=1">
+          <span class="fl">$f_3$</span>
+          <div>
+            <p>Para $(x,y)\ne(0,0)$, com $q=x^2+y^2$, multiplicando por $\sqrt{q+1}-1$ em cima e embaixo, $\dfrac{q}{\sqrt{q+1}+1}=\sqrt{q+1}-1$.</p>
+            <p>A expressão da direita é contínua e vale $\sqrt1-1=0$ na origem. Logo $\lim f_3=0$.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">3</span>Por que o mesmo valor em algumas trajetórias não prova nada</h3>
+        <p>Dois valores diferentes provam que o limite <i>não</i> existe, mas o contrário não vale. Testar uma, dez ou infinitas trajetórias só dá uma condição <b>necessária</b>. A prova de que o limite existe precisa valer para todos os pontos próximos ao mesmo tempo, como a majoração $|f_1|\le\sqrt{x^2+y^2}$ acima.</p>
+        <div class="fnrow" data-stage="fn=f2;view=values;paths=ax,ay,p1,p2;m=1;u=1">
+          <span class="fl">$f_2$</span>
+          <div>
+            <p>Pelos eixos e pelas parábolas $y=x^2$ e $x=y^2$, $f_2\to0$ em todos os casos. Isso parece indicar limite $0$.</p>
+            <button class="try" data-stage="fn=f2;view=values;paths=ax,ay,p1,p2,ln;m=1;u=1">Acrescentar y = x</button>
+            <p>Ao acrescentar a diagonal, o valor é $\tfrac12$ em toda a trajetória e o limite deixa de existir.</p>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f4;view=values;paths=ax,ay,ln,p1;m=2;u=1">
+          <span class="fl">$f_4$</span>
+          <div>
+            <p><i>Exemplo extra.</i> Em $f_4=\dfrac{x^2y}{x^4+y^2}$, toda reta $y=mx$ dá $\dfrac{mx}{x^2+m^2}\to0$, e os eixos também. Mesmo assim, ao longo de $y=x^2$ o valor é $\dfrac{x^4}{2x^4}=\tfrac12$. O limite não existe, apesar de <i>todas as retas</i> concordarem.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">4</span>Limite, valor e continuidade</h3>
+        <p>$f$ é contínua em $(0,0)$ quando três coisas acontecem juntas: $f(0,0)$ existe, $\lim f$ existe, e os dois são iguais.</p>
+        <div data-stage="fn=f3;view=surface;paths=ax,ay,ln;m=1;u=1">
+          <table class="ex">
+            <thead><tr><th></th><th>limite</th><th>$f(0,0)$</th><th>conclusão</th></tr></thead>
+            <tbody>
+              <tr><td>$f_1$</td><td>$0$</td><td>$0$</td><td><span class="mk mk-ok">contínua</span></td></tr>
+              <tr><td>$f_2$</td><td>não existe</td><td>$0$</td><td><span class="mk mk-fail">descontínua</span><small>não há limite para igualar</small></td></tr>
+              <tr><td>$f_3$</td><td>$0$</td><td>$2$</td><td><span class="mk mk-fail">descontínua</span><small>removível: o limite existe, mas difere de $f(0,0)$</small></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">5</span>Mudar só $f(0,0)$</h3>
+        <p>O limite depende apenas dos valores em pontos <i>diferentes</i> da origem, então reatribuir $f(0,0)$ não o altera. Use o controle <b>f(0, 0)</b> do gráfico.</p>
+        <div class="fnrow" data-stage="fn=f3;view=surface;paths=ax,ay,ln;m=1;u=1;v0=0">
+          <span class="fl">$f_3$</span>
+          <div><p>Com $f_3(0,0)=0$ o ponto cheio cai sobre o círculo vazado e a função fica contínua. Com qualquer outro valor, inclusive o $2$ do enunciado, continua descontínua.</p></div>
+        </div>
+        <div class="fnrow" data-stage="fn=f1;view=values;paths=ax,ay,ln,p1,sp;m=1;u=1;v0=1">
+          <span class="fl">$f_1$</span>
+          <div><p>Com $f_1(0,0)=1$ a continuidade se perde, embora o limite continue sendo $0$: a descontinuidade é removível.</p></div>
+        </div>
+        <div class="fnrow" data-stage="fn=f2;view=values;paths=ax,ln,p1;m=1;u=1;v0=0.25">
+          <span class="fl">$f_2$</span>
+          <div><p>Nenhum valor serve: sem limite, não há com o que igualar $f_2(0,0)$.</p></div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3>Resposta à pergunta orientadora</h3>
+        <div class="answer">
+          <p class="answer-title">Três condições diferentes.</p>
+          <p><b>Valor:</b> $f(0,0)$ é o que a regra atribui <i>no</i> ponto. <b>Limite:</b> é o que $f$ faz <i>perto</i> do ponto, ignorando o próprio ponto. <b>Continuidade:</b> exige que o limite exista, que o valor exista, e que sejam iguais.</p>
+          <p>Cada uma pode falhar sozinha: em $f_3$ o limite e o valor existem e são diferentes; em $f_2$ o valor existe e o limite não.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="question" id="q3" aria-labelledby="q3-titulo">
+  <header class="q-head">
+    <h2 id="q3-titulo"><span class="q-num">3</span>Derivadas parciais, diferenciabilidade e continuidade <span class="q-pts">3,0 pontos</span></h2>
+    <p class="q-guide">Por que a existência de ambas as derivadas parciais não é suficiente para garantir diferenciabilidade? Diferenciabilidade implica continuidade?</p>
+  </header>
+
+  <div class="lab">
+    <div class="stage" id="q3-stage">
+      <div class="stage-bar">
+        <div class="seg" id="q3-fn" role="tablist" aria-label="Função">
+          <button role="tab" data-fn="f" aria-selected="true">f</button>
+          <button role="tab" data-fn="g" aria-selected="false">g</button>
+        </div>
+        <div class="seg" id="q3-view" role="tablist" aria-label="Vista">
+          <button role="tab" data-view="surface" aria-selected="true">Superfície</button>
+          <button role="tab" data-view="cuts" aria-selected="false">Cortes</button>
+          <button role="tab" data-view="angle" aria-selected="false">Erro por direção</button>
+          <button role="tab" data-view="approach" aria-selected="false">Erro ao aproximar</button>
+        </div>
+      </div>
+      <div class="stage-formula" id="q3-formula"></div>
+      <div class="stage-plot">
+        <div class="plot" id="q3-p-surface"></div>
+        <div class="plot" id="q3-p-cuts" hidden></div>
+        <div class="plot" id="q3-p-angle" hidden></div>
+        <div class="plot" id="q3-p-approach" hidden></div>
+      </div>
+      <div class="stage-legend" id="q3-legend">
+        <span class="sw"><i style="border-top-color:#d17a00"></i>corte y = 0</span>
+        <span class="sw"><i class="dash" style="border-top-color:#7a4cc2"></i>corte x = 0</span>
+        <span class="sw"><i style="border-top-color:#2b59c3"></i>corte na direção θ</span>
+        <span class="sw"><i class="area" style="background:#f6d6e2;outline-color:#c2185b"></i>plano candidato z = L(h,k)</span>
+      </div>
+      <div class="stage-dock">
+        <div class="stage-read">
+          <div class="read" id="q3-read-part" aria-live="polite"></div>
+          <div class="read" id="q3-read-err" aria-live="polite"></div>
+          <div class="read" id="q3-read-ver" aria-live="polite"></div>
+        </div>
+        <div class="stage-ctl">
+          <div class="ctl">
+            <div class="ctl-grid">
+            <div class="ctl-row">
+              <span class="ctl-name">Direção θ</span>
+              <input id="q3-th" type="range" min="0" max="360" step="1" value="45" aria-label="Direção de aproximação, em graus">
+              <output class="c-out" id="q3-th-out">45°</output>
+            </div>
+            <div class="ctl-row">
+              <span class="ctl-name">Aproximação</span>
+              <input id="q3-u" type="range" min="0" max="3" step="0.01" value="1" aria-label="Distância r até a origem, em escala logarítmica">
+              <output class="c-out" id="q3-u-out" style="min-width:4.6rem">r = 0,1</output>
+            </div>
+            </div>
+            <div class="ctl-row"><span class="presets" id="q3-th-presets"><span>Direções:</span>
+              <button class="preset" data-v="0">0° (eixo x)</button><button class="preset" data-v="45">45° (diagonal)</button><button class="preset" data-v="90">90° (eixo y)</button><button class="preset" data-v="135">135°</button></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="narr">
+      <p class="hint">Clique em um trecho destacado, ou em “Ver no gráfico”, para mostrá-lo no gráfico fixo.</p>
+
+      <article class="req">
+        <h3><span class="rn">1</span>Derivadas parciais na origem, pela definição</h3>
+        <p>Como as funções são definidas por partes, a regra de derivação não vale na origem. Usa-se o limite do quociente incremental:
+        $f_x(0,0)=\lim_{h\to0}\dfrac{f(h,0)-f(0,0)}{h}$ e $f_y(0,0)=\lim_{k\to0}\dfrac{f(0,k)-f(0,0)}{k}$.</p>
+        <div class="fnrow" data-stage="fn=f;view=surface;th=45;u=1">
+          <span class="fl">$f$</span>
+          <div><p>Para $h\ne0$, $f(h,0)=\dfrac{h\cdot0}{|h|}=0$. Logo $f_x(0,0)=\lim\dfrac{0-0}{h}=0$. Do mesmo modo $f(0,k)=0$ e $f_y(0,0)=0$.</p></div>
+        </div>
+        <div class="fnrow" data-stage="fn=g;view=surface;th=45;u=1">
+          <span class="fl">$g$</span>
+          <div><p>Para $h\ne0$, $g(h,0)=\dfrac{h\cdot0}{h^2}=0$, e $g(0,k)=0$. Os quocientes são todos $0$: $g_x(0,0)=g_y(0,0)=0$. Isso vale mesmo com $g$ <b>descontínua</b> na origem.</p></div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">2</span>Cortes por $x=0$ e $y=0$</h3>
+        <p>$f_x(0,0)$ é a inclinação em $x=0$ do corte feito pelo plano $y=0$, e $f_y(0,0)$ a do corte por $x=0$. Em ambas as funções esses dois cortes são a reta horizontal $z=0$, de inclinação $0$ (laranja e roxo). Eles só olham duas direções.</p>
+        <p>O corte azul usa o plano vertical que passa pela origem na direção $\theta$. Mexa em $\theta$ no controle.</p>
+        <div class="fnrow" data-stage="fn=f;view=cuts;th=45;u=1">
+          <span class="fl">$f$</span>
+          <div><p>Na direção $\theta$, $f(t\cos\theta,t\sin\theta)=\tfrac12|t|\sin2\theta$: um <b>V</b> com inclinação $\pm\tfrac12\sin2\theta$. Só é plano quando $\sin2\theta=0$, isto é, nos eixos. Na diagonal há uma quina em $t=0$, e nenhuma reta tangente.</p></div>
+        </div>
+        <div class="fnrow" data-stage="fn=g;view=cuts;th=45;u=1">
+          <span class="fl">$g$</span>
+          <div><p>Na direção $\theta$, $g=\tfrac12\sin2\theta$ para $t\ne0$ e $g(0,0)=0$: um <b>salto</b> em $t=0$. A superfície rompe, exceto nos eixos.</p></div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">3</span>A aplicação linear candidata</h3>
+        <p>Com as derivadas parciais encontradas,
+        $$L(h,k)=f_x(0,0)\,h+f_y(0,0)\,k=0\cdot h+0\cdot k=0,$$
+        e o mesmo vale para $g$. O gráfico de $L$ é o plano horizontal $z=0$ (em rosa). Se $f$ for diferenciável, ele é <i>o</i> plano tangente. A pergunta é se ele aproxima bem $f$ em todas as direções.</p>
+        <button class="try" data-stage="fn=f;view=surface;th=45;u=1">Ver o plano candidato em f</button>
+        <button class="try" data-stage="fn=g;view=surface;th=45;u=1">Ver o plano candidato em g</button>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">4</span>O quociente de erro</h3>
+        <p>Com $f(0,0)=0$ e $L\equiv0$, o quociente a estudar é $E(h,k)=\dfrac{f(h,k)}{\sqrt{h^2+k^2}}$. A função é diferenciável na origem quando $E\to0$ <i>em todas as direções ao mesmo tempo</i>.</p>
+        <div class="fnrow" data-stage="fn=f;view=angle;th=45;u=1">
+          <span class="fl">$f$</span>
+          <div>
+            <p>$E(h,k)=\dfrac{hk}{h^2+k^2}=\tfrac12\sin2\theta$. Ao longo dos eixos vale $0$, mas ao longo de $(t,t)$ vale $\tfrac12$ para todo $t\ne0$. Como o limite precisaria ser $0$ por todas as trajetórias, <b>$f$ não é diferenciável na origem</b>.</p>
+            <p>No gráfico, as curvas para $r=1;\ 0{,}1;\ 0{,}01;\ 0{,}001$ coincidem: o erro não encolhe quando $r$ diminui.</p>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=g;view=approach;th=45;u=1">
+          <span class="fl">$g$</span>
+          <div>
+            <p>$E(h,k)=\dfrac{hk}{(h^2+k^2)^{3/2}}$. Ao longo de $(t,t)$, com $t>0$, $E=\dfrac{1}{2\sqrt2\,t}\to+\infty$. O quociente nem fica limitado, então <b>$g$ não é diferenciável na origem</b>.</p>
+            <p>Na aba <b>Erro ao aproximar</b>, a curva de $\sup_\theta|E|$ sobe quando $r\to0$, no lugar de cair.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">5</span>Continuidade e as relações lógicas</h3>
+        <div class="fnrow" data-stage="fn=f;view=surface;th=135;u=1">
+          <span class="fl">$f$</span>
+          <div><p>Como $|xy|\le\tfrac12(x^2+y^2)$, $|f(x,y)|\le\tfrac12\sqrt{x^2+y^2}\to0=f(0,0)$. Logo $f$ é <b>contínua</b> na origem.</p></div>
+        </div>
+        <div class="fnrow" data-stage="fn=g;view=cuts;th=45;u=1">
+          <span class="fl">$g$</span>
+          <div><p>$g=\tfrac12$ na diagonal e $g=0$ nos eixos, perto da origem. O limite não existe (é o $f_2$ da Questão 2). Logo $g$ <b>não é contínua</b> na origem.</p></div>
+        </div>
+        <table class="ex">
+          <thead><tr><th></th><th>parciais existem</th><th>contínua</th><th>diferenciável</th></tr></thead>
+          <tbody>
+            <tr><td>$f$</td><td><span class="mk mk-ok">sim</span></td><td><span class="mk mk-ok">sim</span></td><td><span class="mk mk-fail">não</span></td></tr>
+            <tr><td>$g$</td><td><span class="mk mk-ok">sim</span></td><td><span class="mk mk-fail">não</span></td><td><span class="mk mk-fail">não</span></td></tr>
+          </tbody>
+        </table>
+        <p><b>Diferenciável ⇒ contínua.</b> Se $f$ é diferenciável em $(0,0)$, então
+        $f(h,k)-f(0,0)=L(h,k)+E(h,k)\sqrt{h^2+k^2}$ com $E\to0$. Os dois termos da direita tendem a $0$, porque $L$ é linear e $\sqrt{h^2+k^2}\to0$. Logo $f(h,k)\to f(0,0)$.</p>
+        <p><b>Diferenciável ⇒ parciais existem</b>, e $L$ é dada por elas. As recíprocas falham, e cada função é um contraexemplo:</p>
+        <svg viewBox="0 0 520 230" role="img" aria-label="Diagrama de implicações: diferenciável implica contínua e implica parciais existem; parciais existem não implica contínua (exemplo g); contínua com parciais não implica diferenciável (exemplo f)" style="width:100%;height:auto;max-width:34rem">
+          <defs>
+            <marker id="ah-ok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0f8b8d"/></marker>
+            <marker id="ah-no" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#c2185b"/></marker>
+          </defs>
+          <g font-family="Bricolage Grotesque, sans-serif" font-size="15" font-weight="600" fill="#14233b">
+            <rect x="12" y="88" width="150" height="50" rx="10" fill="#fbfcfc" stroke="#14233b" stroke-width="1.5"/><text x="87" y="118" text-anchor="middle">Diferenciável</text>
+            <rect x="330" y="14" width="180" height="46" rx="10" fill="#fbfcfc" stroke="#14233b" stroke-width="1.5"/><text x="420" y="43" text-anchor="middle">Contínua</text>
+            <rect x="330" y="166" width="180" height="46" rx="10" fill="#fbfcfc" stroke="#14233b" stroke-width="1.5"/><text x="420" y="195" text-anchor="middle">Parciais existem</text>
+          </g>
+          <g stroke="#0f8b8d" stroke-width="2.5" fill="none">
+            <path d="M162 102L328 44" marker-end="url(#ah-ok)"/>
+            <path d="M162 124L328 188" marker-end="url(#ah-ok)"/>
+          </g>
+          <g stroke="#c2185b" stroke-width="2.5" fill="none" stroke-dasharray="6 5">
+            <path d="M420 164L420 62" marker-end="url(#ah-no)"/>
+            <path d="M322 113L166 113" marker-end="url(#ah-no)"/>
+            <path d="M330 37H322V189H330" stroke-dasharray="0"/>
+          </g>
+          <g font-family="Bricolage Grotesque, sans-serif" font-size="13" fill="#9c1049" font-weight="600">
+            <text x="430" y="118">falha: exemplo g</text>
+            <text x="244" y="104" text-anchor="middle">falha: exemplo f</text>
+            <text x="244" y="132" text-anchor="middle" font-weight="500">(contínua e parciais)</text>
+          </g>
+        </svg>
+      </article>
+
+      <article class="req">
+        <h3>Resposta à pergunta orientadora</h3>
+        <div class="answer">
+          <p class="answer-title">Parciais olham duas direções; diferenciabilidade olha todas.</p>
+          <p>Cada derivada parcial vem de um corte reto, ao longo de um eixo. Diferenciabilidade pede que uma <i>única</i> aplicação linear aproxime $f$ em todas as direções ao mesmo tempo, com erro menor que a distância ($E\to0$). Em $f$ e $g$ os eixos são planos, mas nas outras direções a superfície sobe, e o erro não diminui.</p>
+          <p><b>Diferenciabilidade implica continuidade:</b> sim, como mostrado acima. Por isso $g$, que não é contínua, não pode ser diferenciável. A recíproca falha: $f$ é contínua e não é diferenciável.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="question" id="q4" aria-labelledby="q4-titulo">
+  <header class="q-head">
+    <h2 id="q4-titulo"><span class="q-num">4</span>Plano tangente e reta normal <span class="q-pts">2,5 pontos</span></h2>
+    <p class="q-guide">Como a diferenciabilidade justifica a existência do plano tangente ao gráfico? Por que cortes com tangentes não bastam para garantir esse plano?</p>
+  </header>
+
+  <div class="lab">
+    <div class="stage" id="q4-stage">
+      <div class="stage-bar">
+        <div class="seg" id="q4-fn" role="tablist" aria-label="Função">
+          <button role="tab" data-fn="f1" aria-selected="true">f<sub>1</sub></button>
+          <button role="tab" data-fn="f2" aria-selected="false">f<sub>2</sub></button>
+          <button role="tab" data-fn="f3" aria-selected="false">f<sub>3</sub></button>
+        </div>
+        <div class="seg" id="q4-view" role="tablist" aria-label="Vista">
+          <button role="tab" data-view="tangent" aria-selected="true">Plano tangente</button>
+          <button role="tab" data-view="error" aria-selected="false">Erro local</button>
+          <button role="tab" data-view="map" aria-selected="false">Mapa</button>
+        </div>
+      </div>
+      <div class="stage-formula" id="q4-formula"></div>
+      <div class="stage-plot">
+        <div class="plot" id="q4-p-tangent"></div>
+        <div class="plot" id="q4-p-error" hidden></div>
+        <div class="plot" id="q4-p-map" hidden></div>
+      </div>
+      <div class="stage-legend" id="q4-legend-vec">
+        <span class="sw"><i style="border-top-color:#d17a00"></i>vetor tangente σ<sub>x</sub></span>
+        <span class="sw"><i style="border-top-color:#2b59c3"></i>vetor tangente σ<sub>y</sub></span>
+        <span class="sw"><i style="border-top-color:#14233b"></i>normal σ<sub>x</sub> × σ<sub>y</sub> e reta normal</span>
+        <span class="sw"><i class="area"></i>plano tangente</span>
+        <span class="sw"><i class="area" style="background:#f6d6e2;outline-color:#c2185b"></i>plano candidato, não tangente</span>
+      </div>
+      <div class="stage-dock">
+        <div class="stage-read">
+          <div class="read" id="q4-read-pt" aria-live="polite"></div>
+          <div class="read" id="q4-read-diff" aria-live="polite"></div>
+          <div class="read" id="q4-read-err" aria-live="polite"></div>
+        </div>
+        <div class="stage-ctl">
+          <div class="ctl">
+            <div class="ctl-row">
+              <span class="ctl-name">Ponto (a, b)</span>
+              <label>a <input class="num" id="q4-a" type="number" step="0.05" min="-2.2" max="2.2" value="1"></label>
+              <label>b <input class="num" id="q4-b" type="number" step="0.05" min="-2.2" max="2.2" value="0.5"></label>
+              <span class="presets" id="q4-pt-presets"><span>Pontos:</span>
+                <button class="preset" data-a="0" data-b="0">origem</button><button class="preset" data-a="1" data-b="0.5">(1; 0,5)</button><button class="preset" data-a="-1" data-b="1">(−1; 1)</button><button class="preset" data-a="0.2" data-b="0.1">(0,2; 0,1)</button></span>
+            </div>
+            <div class="ctl-row">
+              <span class="ctl-name">Aproximação</span>
+              <input id="q4-u" type="range" min="-0.3" max="2.3" step="0.01" value="0" aria-label="Tamanho da janela ρ ao redor do ponto, em escala logarítmica">
+              <output class="c-out" id="q4-u-out" style="min-width:6rem">ρ = 1</output>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="narr">
+      <p class="hint">Clique em um trecho destacado, ou em “Ver no gráfico”, para mostrá-lo no gráfico fixo. Na aba <b>Mapa</b>, clique no plano para escolher o ponto.</p>
+
+      <article class="req">
+        <h3><span class="rn">1</span>Escolher o ponto na superfície</h3>
+        <p>Digite $(a,b)$ ou clique na aba <b>Mapa</b>. O programa calcula $f(a,b)$ e marca $P=(a,b,f(a,b))$ sobre a superfície: verde-azulado quando há plano tangente, rosa quando não há. O controle <b>Aproximação</b> é o tamanho $\rho$ da janela ao redor de $P$.</p>
+        <button class="try" data-stage="fn=f1;view=tangent;a=1;b=0.5;u=0">f₁ em (1; 0,5)</button>
+        <button class="try" data-stage="fn=f2;view=tangent;a=0;b=0;u=0">f₂ na origem</button>
+        <button class="try" data-stage="fn=f3;view=tangent;a=0;b=0;u=0">f₃ na origem</button>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">2</span>Plano tangente e reta normal, quando $f$ é diferenciável</h3>
+        <p>Se $f$ é diferenciável em $(a,b)$, o plano tangente é $z=f(a,b)+f_x(a,b)(x-a)+f_y(a,b)(y-b)$ e a reta normal é $(a,b,f(a,b))+t\,(-f_x,-f_y,1)$. Para saber se vale a hipótese, usa-se que <b>parciais contínuas numa vizinhança</b> do ponto (classe $C^1$) garantem diferenciabilidade.</p>
+        <div class="fnrow" data-stage="fn=f1;view=tangent;a=1;b=0.5;u=0">
+          <span class="fl">$f_1$</span>
+          <div>
+            <p>$f_x=2x$, $f_y=2y$, contínuas em todo o plano. Em $(a,b)$: $z=2ax+2by-a^2-b^2$. Por exemplo, em $(1,2)$ o plano é $z=2x+4y-5$ e a normal tem direção $(-2,-4,1)$. Na origem o plano é $z=0$.</p>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f2;view=tangent;a=1.5;b=2;u=0">
+          <span class="fl">$f_2$</span>
+          <div>
+            <p>Fora da origem, $f_x=x/r$ e $f_y=y/r$ com $r=\sqrt{x^2+y^2}$, contínuas. Em $(a,b)$ o plano simplifica para $z=\dfrac{ax+by}{\sqrt{a^2+b^2}}$. Em $(1{,}5;\,2)$, $r=2{,}5$ e $z=0{,}6x+0{,}8y$: um plano que contém a geratriz do cone, passando pela origem.</p>
+          </div>
+        </div>
+        <div class="fnrow" data-stage="fn=f3;view=tangent;a=1;b=1;u=0">
+          <span class="fl">$f_3$</span>
+          <div>
+            <p>Fora da origem, $f_x=\dfrac{y^3}{r^3}$ e $f_y=\dfrac{x^3}{r^3}$, contínuas. Como $f_3(tx,ty)=t\,f_3(x,y)$ (homogênea de grau 1), o plano $z=f_x x+f_y y$ passa pela origem. Em $(1,1)$: $f_x=f_y=\dfrac{1}{2\sqrt2}$ e $z=\dfrac{x+y}{2\sqrt2}$.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">3</span>Vetores tangentes e o vetor normal</h3>
+        <p>Para a parametrização $\sigma(x,y)=(x,y,f(x,y))$, os vetores tangentes às curvas coordenadas são $\sigma_x=(1,0,f_x)$ e $\sigma_y=(0,1,f_y)$. O produto vetorial dá
+        $$\sigma_x\times\sigma_y=\begin{vmatrix}\mathbf i&\mathbf j&\mathbf k\\1&0&f_x\\0&1&f_y\end{vmatrix}=(-f_x,\,-f_y,\,1).$$
+        No gráfico, $\sigma_x$ é laranja, $\sigma_y$ é azul e a normal é preta.</p>
+        <p>Esses dois vetores só exigem que as parciais <i>existam</i>, e o produto vetorial é sempre perpendicular ao plano que eles geram. Mas esse plano só é <i>tangente à superfície</i> se $f$ for diferenciável, que é a hipótese a verificar.</p>
+        <button class="try" data-stage="fn=f1;view=tangent;a=1;b=0.5;u=0">Vetores em f₁</button>
+        <button class="try" data-stage="fn=f3;view=tangent;a=1;b=1;u=0">Vetores em f₃, ponto regular</button>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">4</span>Origem × pontos regulares</h3>
+        <p>A hipótese que permite construir o plano pelo diferencial é a diferenciabilidade em $(a,b)$, e não a mera existência das parciais.</p>
+        <table class="ex">
+          <thead><tr><th></th><th>pontos regulares</th><th>origem</th></tr></thead>
+          <tbody>
+            <tr><td>$f_1$</td><td><span class="mk mk-ok">plano tangente</span><small>parciais contínuas</small></td><td><span class="mk mk-ok">plano tangente</span><small>$z=0$; parciais contínuas</small></td></tr>
+            <tr><td>$f_2$</td><td><span class="mk mk-ok">plano tangente</span><small>parciais contínuas</small></td><td><span class="mk mk-fail">sem plano</span><small>$f_x(0,0)$ não existe</small></td></tr>
+            <tr><td>$f_3$</td><td><span class="mk mk-ok">plano tangente</span><small>parciais contínuas</small></td><td><span class="mk mk-fail">sem plano tangente</span><small>parciais existem, mas $f_3$ não é diferenciável</small></td></tr>
+          </tbody>
+        </table>
+        <div class="fnrow" data-stage="fn=f2;view=tangent;a=0;b=0;u=0.5">
+          <span class="fl">$f_2$</span>
+          <div><p>Na ponta do cone, os cortes têm quina: a inclinação é $+1$ de um lado e $-1$ do outro. Sem derivada parcial, nem vetor tangente nem plano.</p></div>
+        </div>
+        <div class="fnrow" data-stage="fn=f3;view=tangent;a=0;b=0;u=0.5">
+          <span class="fl">$f_3$</span>
+          <div><p>As duas parciais valem $0$ e os vetores $\sigma_x,\sigma_y$ estão no plano $z=0$, em rosa. Só que, na diagonal, a superfície sobe com inclinação $1/\sqrt2$ e abandona o plano. Ele não é tangente.</p></div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3><span class="rn">5</span>Aproximação local e o erro ao se aproximar</h3>
+        <p>Diferenciabilidade em $(a,b)$ significa
+        $f(a+h,b+k)=f(a,b)+f_xh+f_yk+E(h,k)\sqrt{h^2+k^2}$ com $E\to0$. Geometricamente, a distância vertical entre a superfície e o plano é <i>muito menor</i> que a distância ao ponto: ao dar zoom, a superfície vira o plano. Diminua $\rho$ no controle <b>Aproximação</b>.</p>
+        <div class="fnrow" data-stage="fn=f1;view=tangent;a=1;b=0.5;u=1.5">
+          <span class="fl">$f_1$</span>
+          <div><p>Com zoom de 30 vezes, o paraboloide e o plano são indistinguíveis. Aqui a diferença é $h^2+k^2$, então $E=\sqrt{h^2+k^2}=\rho$: o erro cai na mesma proporção em que a janela diminui.</p>
+          <button class="try" data-stage="fn=f1;view=error;a=1;b=0.5;u=0">Ver o erro × ρ</button></div>
+        </div>
+        <div class="fnrow" data-stage="fn=f3;view=tangent;a=0;b=0;u=1.5">
+          <span class="fl">$f_3$</span>
+          <div><p>Na origem, $f_3(tx,ty)=t\,f_3(x,y)$: com zoom a figura é a <i>mesma</i> em qualquer escala, e nunca vira o plano $z=0$. O quociente de erro vale $\tfrac12$ na diagonal, para todo $\rho$.</p>
+          <button class="try" data-stage="fn=f3;view=error;a=0;b=0;u=0">Ver o erro × ρ</button></div>
+        </div>
+        <div class="fnrow" data-stage="fn=f2;view=tangent;a=0;b=0;u=1">
+          <span class="fl">$f_2$</span>
+          <div><p>Na ponta do cone o zoom também não achata nada. Nenhuma aplicação linear $L$ serve: $E(\varphi)+E(\varphi+\pi)\ge2$ para qualquer $L$, porque a superfície sobe com inclinação $1$ em direções opostas, e uma $L$ linear teria sinais opostos nelas.</p></div>
+        </div>
+      </article>
+
+      <article class="req">
+        <h3>Resposta à pergunta orientadora</h3>
+        <div class="answer">
+          <p class="answer-title">Plano tangente é uma aproximação linear em todas as direções.</p>
+          <p>Diferenciabilidade é exatamente a existência de uma aplicação linear $L$ com $f(a+h,b+k)-f(a,b)-L(h,k)=o\big(\sqrt{h^2+k^2}\big)$. O gráfico de $L$ deslocado para $P$ é o plano que melhor encosta na superfície, e $(-f_x,-f_y,1)$ é perpendicular a ele.</p>
+          <p>Cortes com tangentes não bastam: duas retas tangentes (nas direções $x$ e $y$) sempre geram <i>algum</i> plano, desde que as parciais existam, mas esse plano nada diz sobre as outras direções. Em $f_3$ na origem os dois cortes são retas horizontais e o plano $z=0$ as contém, mas a superfície sai dele na diagonal.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="question" id="resumo" aria-labelledby="resumo-titulo">
+  <header class="q-head">
+    <h2 id="resumo-titulo">Resumo dos resultados</h2>
+    <p class="q-guide">Cada linha foi demonstrada no texto da questão e conferida no <code>verify.py</code>.</p>
+  </header>
+  <div class="resumo">
+    <div>
+      <h3>Questão 1</h3>
+      <table class="ex">
+        <thead><tr><th></th><th>domínio</th><th>imagem</th></tr></thead>
+        <tbody>
+          <tr><td>$f_1$</td><td>$x^2+y^2\le9$ <small>disco fechado</small></td><td>$[0,3]$</td></tr>
+          <tr><td>$f_2$</td><td>$x^2+y^2<4$ <small>disco aberto</small></td><td>$(-\infty,\ln4]$</td></tr>
+          <tr><td>$f_3$</td><td>$x^2+y^2\ne1$</td><td>$(-\infty,-1]\cup(0,\infty)$</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Questão 2, em $(0,0)$</h3>
+      <table class="ex">
+        <thead><tr><th></th><th>limite</th><th>$f(0,0)$</th><th>contínua</th></tr></thead>
+        <tbody>
+          <tr><td>$f_1$</td><td>$0$</td><td>$0$</td><td><span class="mk mk-ok">sim</span></td></tr>
+          <tr><td>$f_2$</td><td>não existe</td><td>$0$</td><td><span class="mk mk-fail">não</span></td></tr>
+          <tr><td>$f_3$</td><td>$0$</td><td>$2$</td><td><span class="mk mk-fail">não</span><small>removível</small></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Questão 3, em $(0,0)$</h3>
+      <table class="ex">
+        <thead><tr><th></th><th>parciais</th><th>contínua</th><th>diferenciável</th></tr></thead>
+        <tbody>
+          <tr><td>$f$</td><td><span class="mk mk-ok">existem</span><small>ambas $0$</small></td><td><span class="mk mk-ok">sim</span></td><td><span class="mk mk-fail">não</span><small>$E=\tfrac12$ na diagonal</small></td></tr>
+          <tr><td>$g$</td><td><span class="mk mk-ok">existem</span><small>ambas $0$</small></td><td><span class="mk mk-fail">não</span></td><td><span class="mk mk-fail">não</span><small>não é contínua</small></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Questão 4: plano tangente</h3>
+      <table class="ex">
+        <thead><tr><th></th><th>pontos regulares</th><th>origem</th></tr></thead>
+        <tbody>
+          <tr><td>$f_1$</td><td><span class="mk mk-ok">existe</span></td><td><span class="mk mk-ok">existe</span><small>$z=0$</small></td></tr>
+          <tr><td>$f_2$</td><td><span class="mk mk-ok">existe</span></td><td><span class="mk mk-fail">não existe</span><small>$f_x(0,0)$ não existe</small></td></tr>
+          <tr><td>$f_3$</td><td><span class="mk mk-ok">existe</span></td><td><span class="mk mk-fail">não existe</span><small>parciais existem; não diferenciável</small></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  Trabalho de Cálculo II, UFAM. Os gráficos são evidência exploratória; as conclusões estão demonstradas no texto e conferidas por <code>verify.py</code>.
+</footer>
+
+<script src="vendor/plotly.min.js"></script>
+<script src="vendor/katex/katex.min.js"></script>
+<script src="vendor/katex/auto-render.min.js"></script>
+<script src="js/core.js"></script>
+<script src="js/hero.js"></script>
+<script src="js/q1.js"></script>
+<script src="js/q2.js"></script>
+<script src="js/q3.js"></script>
+<script src="js/q4.js"></script>
+<script>
+  // Fórmulas do texto fixo (as do gráfico são renderizadas pelos módulos).
+  Lab.renderMath(document.body);
+</script>
+</body>
+</html>
