@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relatório — Cálculo II: modelagem computacional</title>
+<link rel="stylesheet" href="../vendor/katex/katex.min.css">
+<style>
+@font-face { font-family: "Bricolage Grotesque"; src: url("../vendor/fonts/bricolage-latin.woff2") format("woff2"); font-weight: 200 800; }
+@font-face { font-family: "Source Serif 4"; src: url("../vendor/fonts/source-serif-latin.woff2") format("woff2"); font-weight: 200 900; font-style: normal; }
+@font-face { font-family: "Source Serif 4"; src: url("../vendor/fonts/source-serif-italic-latin.woff2") format("woff2"); font-weight: 200 900; font-style: italic; }
+
+:root { --ink:#14233b; --ink2:#4a5a70; --line:#c5cfd6; --ok:#0f8b8d; --okink:#0a6466; --okt:#d3ebeb; --fail:#c2185b; --failink:#9c1049; --failt:#f6d6e2;
+        --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif; --text:"Source Serif 4",Georgia,serif; }
+@page { size: A4; margin: 15mm 15mm 17mm; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { margin: 0; color: var(--ink); background: #fff; font-family: var(--text); font-size: 9.7pt; line-height: 1.45; }
+@media screen { body { background:#e8edf0; } .page { max-width: 210mm; margin: 0 auto; padding: 15mm; background:#fff; } }
+h1,h2,h3 { font-family: var(--display); letter-spacing: -0.015em; line-height: 1.1; margin: 0; }
+p { margin: 0 0 0.55em; }
+.katex { font-size: 1.03em; }
+
+header.top { display: grid; grid-template-columns: 1.25fr 1fr; gap: 10mm; align-items: end; padding-bottom: 5mm; border-bottom: 1.5px solid var(--ink); }
+h1 { font-size: 24pt; font-weight: 800; letter-spacing: -0.03em; line-height: 0.98; }
+.sub { font-family: var(--display); font-size: 10.5pt; color: var(--ink2); margin-top: 2mm; font-weight: 500; }
+dl.meta { display: grid; grid-template-columns: max-content 1fr; gap: 1.2mm 4mm; margin: 0; font-size: 9pt; }
+dl.meta dt { color: var(--ink2); } dl.meta dd { margin: 0; border-bottom: 0.6pt solid var(--ink2); min-height: 4.6mm; }
+dl.meta dd.fix { border: 0; }
+
+.method { margin: 4mm 0 2mm; font-size: 9.3pt; color: var(--ink2); }
+.method b { color: var(--ink); }
+.key { display: inline-flex; align-items: center; gap: 1.4mm; margin-right: 4mm; font-family: var(--display); font-weight: 600; font-size: 8.6pt; }
+.key::before { content: ""; width: 2.2mm; height: 2.2mm; display: inline-block; }
+.key.ok { color: var(--okink); } .key.ok::before { background: var(--ok); border-radius: 50%; }
+.key.no { color: var(--failink); } .key.no::before { background: var(--fail); transform: rotate(45deg); }
+
+section.q { margin-top: 6mm; padding-top: 4mm; border-top: 0.8pt solid var(--line); }
+section.q:first-of-type { border-top: 0; }
+section.q > h2 { break-after: avoid; font-size: 15pt; font-weight: 800; display: flex; gap: 3mm; align-items: baseline; margin-bottom: 2.5mm; }
+section.q > h2 .n { color: var(--ok); font-size: 1.3em; letter-spacing: -0.05em; }
+section.q > h2 small { font-size: 8.5pt; font-weight: 500; color: var(--ink2); letter-spacing: 0; }
+h3 { break-after: avoid; font-size: 10.2pt; font-weight: 700; margin: 3mm 0 1mm; }
+
+table { width: 100%; border-collapse: collapse; margin: 1.5mm 0 2.5mm; font-size: 9pt; break-inside: avoid; }
+th, td { text-align: left; vertical-align: top; padding: 1.3mm 2.5mm 1.3mm 0; border-bottom: 0.6pt solid var(--line); }
+th { font-family: var(--display); font-size: 8.3pt; font-weight: 600; color: var(--ink2); }
+td small { display: block; color: var(--ink2); font-size: 8pt; line-height: 1.3; }
+.mk { display: inline-flex; align-items: center; gap: 1.2mm; white-space: nowrap; font-weight: 600; }
+.mk::before { content: ""; width: 1.9mm; height: 1.9mm; display: inline-block; }
+.mk.ok { color: var(--okink); } .mk.ok::before { background: var(--ok); border-radius: 50%; }
+.mk.no { color: var(--failink); } .mk.no::before { background: var(--fail); transform: rotate(45deg); }
+
+.figs { display: grid; gap: 3mm; margin: 2.5mm 0; }
+.figs.c2 { grid-template-columns: 1fr 1fr; } .figs.c3 { grid-template-columns: 1fr 1fr 1fr; }
+figure { margin: 0; break-inside: avoid; }
+figure img { width: 100%; height: auto; max-height: 54mm; object-fit: contain; display: block; border: 0.6pt solid var(--line); border-radius: 1.5mm; background: #fbfcfc; }
+figcaption { font-size: 8pt; line-height: 1.3; color: var(--ink2); margin-top: 1mm; }
+figcaption b { color: var(--ink); font-family: var(--display); }
+
+.figs .answer { margin: 0; align-self: start; }
+.answer { margin: 2.5mm 0 0; padding: 2mm 3mm; border-left: 1.2mm solid var(--ok); background: #f4f8f9; break-inside: avoid; }
+.answer .t { font-family: var(--display); font-weight: 700; margin-bottom: 0.6mm; }
+.answer p:last-child { margin-bottom: 0; }
+ul { margin: 0 0 0.6em; padding-left: 4.5mm; } li { margin-bottom: 0.25em; }
+code { font-size: 0.9em; }
+.break { break-before: page; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="top">
+  <div>
+    <h1>Quando uma propriedade falha</h1>
+    <p class="sub">Cálculo II: modelagem computacional. Relatório com resultados, justificativas e imagens dos modelos.</p>
+  </div>
+  <dl class="meta">
+    <dt>Instituição</dt><dd class="fix">Universidade Federal do Amazonas (UFAM)</dd>
+    <dt>Curso</dt><dd class="fix">Engenharia de Software</dd>
+    <dt>Disciplina</dt><dd class="fix">Cálculo II</dd>
+    <dt>Turma</dt><dd class="fix">Engenharia de Software</dd>
+    <dt>Integrantes</dt><dd class="fix" id="meta-integrantes">Rafael Emanuel<br>Luiz Nery<br>Antonio Lucas<br>Breno Augusto<br>Caio Martins<br>Victor Kossmann<br>Vitor Hugo</dd>
+  </dl>
+</header>
+
+<p class="method"><b>Como foi feito.</b> Cada questão tem um modelo interativo em um site (<code>index.html</code>: superfícies 3D com Plotly e controles para ponto, trajetória, nível e aproximação). As conclusões abaixo são demonstradas à mão e conferidas por <code>verify.py</code>, que faz 62 verificações simbólicas com SymPy. As figuras são <b>evidência exploratória</b>, não prova. Nas figuras, <span class="key ok">a propriedade vale</span><span class="key no">a propriedade falha</span></p>
+
+<!-- ============================ Q1 ============================ -->
+<section class="q">
+  <h2><span class="n">1</span>Domínio, imagem e curvas de nível <small>2,0 pontos</small></h2>
+  <table>
+    <thead><tr><th></th><th>domínio</th><th>imagem</th><th>justificativa</th></tr></thead>
+    <tbody>
+      <tr><td>$f_1=\sqrt{9-x^2-y^2}$</td><td>$x^2+y^2\le9$<small>disco fechado: fronteira incluída ($\sqrt0=0$)</small></td><td>$[0,3]$</td><td>radicando $\ge0$; com $t=x^2+y^2\in[0,9]$, a raiz percorre $[0,3]$. A superfície é o hemisfério superior de $x^2+y^2+z^2=9$.</td></tr>
+      <tr><td>$f_2=\ln(4-x^2-y^2)$</td><td>$x^2+y^2<4$<small>disco aberto: fronteira excluída ($\ln0$)</small></td><td>$(-\infty,\ln4]$</td><td>argumento $>0$; $4-t\in(0,4]$ e $\ln$ é crescente. Perto da fronteira, $z\to-\infty$.</td></tr>
+      <tr><td>$f_3=\dfrac1{x^2+y^2-1}$</td><td>$x^2+y^2\ne1$<small>duas peças: disco aberto e exterior</small></td><td>$(-\infty,-1]\cup(0,\infty)$</td><td>denominador $\ne0$; com $u=t-1$, dentro $u\in[-1,0)$ e $1/u\le-1$; fora $u>0$ e $1/u>0$.</td></tr>
+    </tbody>
+  </table>
+  <p><b>Curvas de nível.</b> Como as três dependem só de $x^2+y^2$, $f=c$ dá circunferências centradas na origem, de raio $\sqrt{9-c^2}$, $\sqrt{4-e^c}$ e $\sqrt{1+1/c}$, respectivamente. <b>Sem curva</b> quando $c\notin\operatorname{Im}f$: $c<0$ ou $c>3$ em $f_1$; $c>\ln4$ em $f_2$; $c=0$ ou $-1&lt;c&lt;0$ em $f_3$ (a equação daria $x^2+y^2<0$, ou $1/u=0$). Num ponto $(a,b)$, o programa substitui na condição e informa qual falhou, por exemplo $f_2(2,0)$: $\ln0$ não existe.</p>
+  <div class="figs c2">
+    <figure><img src="img/q1_dominio_f2.png" alt=""><figcaption><b>Figura 1.</b> Domínio de $f_2$. O ponto $(2,0)$ está na fronteira tracejada, que é excluída: <i>fora</i> do domínio.</figcaption></figure>
+    <figure><img src="img/q1_superficie_f3.png" alt=""><figcaption><b>Figura 2.</b> Superfície de $f_3$ com o plano $z=c$, $c=-0{,}5$. O plano não toca a superfície: $c$ está fora da imagem.</figcaption></figure>
+    <figure><img src="img/q1_nivel_f1.png" alt=""><figcaption><b>Figura 3.</b> Curvas de nível de $f_1$. Em destaque, $c=1{,}5$: circunferência de raio $\sqrt{6{,}75}\approx2{,}60$.</figcaption></figure>
+    <div class="answer"><p class="t">Entradas e saídas têm restrições diferentes.</p>
+  <p>Cada operação restringe a entrada (raiz real pede radicando $\ge0$, logaritmo pede argumento $>0$, divisão pede denominador $\ne0$). E a expressão só produz certos valores ($\sqrt{\cdot}\ge0$, $\ln(4-t)\le\ln4$, $1/u$ com $u\ge-1$ nunca cai em $(-1,0]$), o que deixa níveis vazios.</p></div>
+  </div>
+</section>
+
+<!-- ============================ Q2 ============================ -->
+<section class="q">
+  <h2><span class="n">2</span>Limites e continuidade <small>2,5 pontos</small></h2>
+  <table>
+    <thead><tr><th></th><th>limite em $(0,0)$</th><th>$f(0,0)$</th><th>continuidade</th><th>justificativa</th></tr></thead>
+    <tbody>
+      <tr><td>$f_1=\dfrac{x^2y}{x^2+y^2}$</td><td>$0$</td><td>$0$</td><td><span class="mk ok">contínua</span></td><td>$|f_1|\le|y|\le\sqrt{x^2+y^2}$ (pois $\tfrac{x^2}{x^2+y^2}\le1$). Dado $\varepsilon$, $\delta=\varepsilon$ serve.</td></tr>
+      <tr><td>$f_2=\dfrac{xy}{x^2+y^2}$</td><td>não existe</td><td>$0$</td><td><span class="mk no">descontínua</span></td><td>Ao longo de $y=mx$, $f_2=\dfrac{m}{1+m^2}$: $0$ para $m=0$ e $\tfrac12$ para $m=1$.</td></tr>
+      <tr><td>$f_3=\dfrac{x^2+y^2}{\sqrt{x^2+y^2+1}+1}$</td><td>$0$</td><td>$2$</td><td><span class="mk no">descontínua</span><small>removível</small></td><td>Fora da origem, $f_3=\sqrt{x^2+y^2+1}-1$, contínua e igual a $0$ na origem.</td></tr>
+    </tbody>
+  </table>
+  <p><b>Por que o mesmo valor em algumas trajetórias não prova o limite.</b> Dois valores diferentes provam que o limite <i>não</i> existe, mas a volta não vale: concordar em algumas trajetórias é só condição necessária. Em $f_2$, os eixos e as parábolas $y=x^2$ e $x=y^2$ dão $0$, e a diagonal dá $\tfrac12$. No exemplo extra $f_4=\dfrac{x^2y}{x^4+y^2}$, <i>todas as retas</i> dão $0$ (e os eixos também), mas ao longo de $y=x^2$ o valor é $\tfrac12$. Provar que existe exige uma majoração válida para todos os pontos próximos, como a de $f_1$.</p>
+  <p><b>Controle de $f(0,0)$.</b> Reatribuir só $f(0,0)$ não altera o limite, que só depende dos pontos vizinhos. Em $f_3$, $f(0,0)=0$ torna a função contínua; em $f_1$, qualquer valor diferente de $0$ quebra a continuidade; em $f_2$, nenhum valor conserta.</p>
+  <div class="figs c2">
+    <figure><img src="img/q2_superficie_f2.png" alt=""><figcaption><b>Figura 4.</b> $f_2$ e trajetórias até a origem: cada reta sobe a uma altura própria ($\tfrac12\sin2\theta$); as curvas não se juntam.</figcaption></figure>
+    <figure><img src="img/q2_valores_f2.png" alt=""><figcaption><b>Figura 5.</b> $f_2$ ao longo das trajetórias, pela distância à origem. Eixos e parábolas tendem a $0$; a diagonal $y=x$ (roxa) fica em $\tfrac12$.</figcaption></figure>
+    <figure><img src="img/q2_superficie_f3.png" alt=""><figcaption><b>Figura 6.</b> $f_3$ com $f(0,0)=2$: o ponto cheio fica acima do círculo vazado (o limite $0$). Descontinuidade removível.</figcaption></figure>
+    <div class="answer"><p class="t">Três condições diferentes.</p>
+  <p><b>Valor</b> é o que a regra atribui <i>no</i> ponto; <b>limite</b> é o que $f$ faz <i>perto</i> dele, ignorando-o; <b>continuidade</b> exige que o limite exista, que o valor exista e que sejam iguais. Cada uma pode falhar sozinha: em $f_3$ limite e valor existem e diferem; em $f_2$ o valor existe e o limite não.</p></div>
+  </div>
+</section>
+
+<!-- ============================ Q3 ============================ -->
+<section class="q">
+  <h2><span class="n">3</span>Derivadas parciais, diferenciabilidade e continuidade <small>3,0 pontos</small></h2>
+  <table>
+    <thead><tr><th></th><th>parciais em $(0,0)$</th><th>contínua</th><th>diferenciável</th><th>quociente de erro $E$</th></tr></thead>
+    <tbody>
+      <tr><td>$f=\dfrac{xy}{\sqrt{x^2+y^2}}$</td><td>$f_x=f_y=0$</td><td><span class="mk ok">sim</span><small>$|f|\le\tfrac12\sqrt{x^2+y^2}$</small></td><td><span class="mk no">não</span></td><td>$E=\tfrac12\sin2\theta$: vale $\tfrac12$ na diagonal, sem tender a $0$.</td></tr>
+      <tr><td>$g=\dfrac{xy}{x^2+y^2}$</td><td>$g_x=g_y=0$</td><td><span class="mk no">não</span><small>limite não existe</small></td><td><span class="mk no">não</span></td><td>$E=\dfrac{\sin2\theta}{2r}$: vale $\dfrac{1}{2\sqrt2\,t}\to\infty$ em $(t,t)$.</td></tr>
+    </tbody>
+  </table>
+  <p><b>Parciais pela definição.</b> Para $h\ne0$, $f(h,0)=g(h,0)=0$ e $f(0,k)=g(0,k)=0$. Logo os quocientes incrementais $\dfrac{f(h,0)-f(0,0)}{h}$ e $\dfrac{f(0,k)-f(0,0)}{k}$ são todos nulos, e $f_x=f_y=g_x=g_y=0$ na origem. A candidata é $L(h,k)=0\cdot h+0\cdot k=0$, o plano $z=0$.</p>
+  <p><b>Cortes.</b> Os cortes por $y=0$ e $x=0$ são a reta horizontal $z=0$, de inclinação $0$ (as parciais). Em outra direção $\theta$, $f(t\cos\theta,t\sin\theta)=\tfrac12|t|\sin2\theta$: um V com quina em $t=0$, sem tangente. Para $g$ o corte é $\tfrac12\sin2\theta$ com $g(0,0)=0$: um salto.</p>
+  <p><b>Diferenciabilidade.</b> Com $f(0,0)=0$ e $L\equiv0$, $E(h,k)=f(h,k)/\sqrt{h^2+k^2}$ precisa tender a $0$ por <i>todas</i> as direções. Em $f$ vale $0$ nos eixos e $\tfrac12$ na diagonal. Em $g$ o quociente nem fica limitado. Nenhuma é diferenciável.</p>
+  <p><b>Relações lógicas.</b> <i>Diferenciável ⇒ contínua:</i> $f(h,k)-f(0,0)=L(h,k)+E\sqrt{h^2+k^2}$, e os dois termos tendem a $0$. <i>Diferenciável ⇒ parciais existem</i>, e $L$ é dada por elas. As recíprocas falham: $f$ é contínua, tem parciais e não é diferenciável; $g$ tem parciais e não é nem contínua.</p>
+  <div class="figs c2">
+    <figure><img src="img/q3_cortes_f.png" alt=""><figcaption><b>Figura 7.</b> Cortes de $f$: os dois eixos são retas horizontais (sobrepostas em $z=0$); o corte a $45^\circ$ (azul) tem quina.</figcaption></figure>
+    <figure><img src="img/q3_erro_f.png" alt=""><figcaption><b>Figura 8.</b> $E$ de $f$ por direção, para $r=1;\,0{,}1;\,0{,}01;\,0{,}001$. As curvas coincidem: o erro não encolhe. A tracejada é o que a diferenciabilidade exigiria.</figcaption></figure>
+    <figure><img src="img/q3_erro_g.png" alt=""><figcaption><b>Figura 9.</b> $\sup_\theta|E|$ de $g$ pela distância (escala log): sobe ao aproximar, em vez de cair.</figcaption></figure>
+    <div class="answer"><p class="t">Parciais olham duas direções; diferenciabilidade olha todas.</p>
+  <p>Cada parcial vem de um corte reto ao longo de um eixo. Diferenciabilidade pede <i>uma</i> aplicação linear que aproxime $f$ em todas as direções, com erro menor que a distância. Em $f$ e $g$ os eixos são planos, mas nas demais direções a superfície sobe. <b>Diferenciabilidade implica continuidade</b>: sim; por isso $g$ não pode ser diferenciável.</p></div>
+  </div>
+</section>
+
+<!-- ============================ Q4 ============================ -->
+<section class="q">
+  <h2><span class="n">4</span>Plano tangente e reta normal <small>2,5 pontos</small></h2>
+  <p>Se $f$ é diferenciável em $(a,b)$, o plano tangente é $z=f(a,b)+f_x(x-a)+f_y(y-b)$ e a reta normal é $(a,b,f(a,b))+t(-f_x,-f_y,1)$. Para $\sigma(x,y)=(x,y,f)$, os vetores tangentes são $\sigma_x=(1,0,f_x)$ e $\sigma_y=(0,1,f_y)$, e $\sigma_x\times\sigma_y=(-f_x,-f_y,1)$. A hipótese a verificar é a diferenciabilidade; parciais <i>contínuas</i> numa vizinhança (classe $C^1$) bastam.</p>
+  <table>
+    <thead><tr><th></th><th>pontos regulares</th><th>origem</th><th>exemplo</th></tr></thead>
+    <tbody>
+      <tr><td>$f_1=x^2+y^2$</td><td><span class="mk ok">plano tangente</span><small>$f_x=2x$, $f_y=2y$ contínuas</small></td><td><span class="mk ok">plano tangente</span><small>$z=0$</small></td><td>em $(1,2)$: $z=2x+4y-5$; normal $(-2,-4,1)$</td></tr>
+      <tr><td>$f_2=\sqrt{x^2+y^2}$</td><td><span class="mk ok">plano tangente</span><small>$f_x=\tfrac xr$, $f_y=\tfrac yr$ contínuas</small></td><td><span class="mk no">sem plano</span><small>$f_x(0,0)$ não existe: $\tfrac{|h|}{h}=\pm1$</small></td><td>em $(1{,}5;\,2)$: $z=0{,}6x+0{,}8y$</td></tr>
+      <tr><td>$f_3=\dfrac{xy}{\sqrt{x^2+y^2}}$</td><td><span class="mk ok">plano tangente</span><small>$f_x=\tfrac{y^3}{r^3}$, $f_y=\tfrac{x^3}{r^3}$ contínuas</small></td><td><span class="mk no">sem plano tangente</span><small>parciais $=0$, mas $f_3$ não é diferenciável</small></td><td>em $(1,1)$: $z=\dfrac{x+y}{2\sqrt2}$</td></tr>
+    </tbody>
+  </table>
+  <p><b>Aproximação local.</b> Diferenciabilidade significa $f(a+h,b+k)=f(a,b)+f_xh+f_yk+E\sqrt{h^2+k^2}$ com $E\to0$: a distância vertical entre superfície e plano é <i>muito menor</i> que a distância ao ponto, então, ao dar zoom, a superfície vira o plano. Em $f_1$, a diferença é exatamente $h^2+k^2$, logo $E=\rho$ (cai junto com a janela). Em $f_3$ na origem, $f_3(tx,ty)=t\,f_3(x,y)$: o zoom reproduz a mesma figura em qualquer escala, $E=\tfrac12$ na diagonal para todo $\rho$ e o plano $z=0$ nunca é tangente. No cone, nenhuma $L$ serve: $E(\varphi)+E(\varphi+\pi)\ge2$.</p>
+  <div class="figs c2">
+    <figure><img src="img/q4_plano_f1.png" alt=""><figcaption><b>Figura 10.</b> $f_1$ em $(1;\,0{,}5)$: plano tangente (verde-azulado), $\sigma_x$ (laranja), $\sigma_y$ (azul) e normal (preta).</figcaption></figure>
+    <figure><img src="img/q4_origem_f3.png" alt=""><figcaption><b>Figura 11.</b> $f_3$ na origem, com zoom de 30 vezes: continua com a mesma forma; o plano candidato $z=0$ (rosa) não é tangente.</figcaption></figure>
+    <figure><img src="img/q4_erro_f1.png" alt=""><figcaption><b>Figura 12.</b> Erro máximo de $f_1$ em $(1;\,0{,}5)$ pela distância $\rho$ (log): cai junto com $\rho$.</figcaption></figure>
+    <figure><img src="img/q4_erro_f3.png" alt=""><figcaption><b>Figura 13.</b> O mesmo para $f_3$ na origem: constante em $\tfrac12$, não cai.</figcaption></figure>
+  </div>
+  <div class="answer"><p class="t">Plano tangente é uma aproximação linear em todas as direções.</p>
+  <p>Diferenciabilidade é a existência de uma $L$ linear com $f(a+h,b+k)-f(a,b)-L(h,k)=o\big(\sqrt{h^2+k^2}\big)$; o gráfico de $L$ deslocado para $P$ é o plano tangente, e $(-f_x,-f_y,1)$ é perpendicular a ele. Cortes com tangentes não bastam: duas retas tangentes, nas direções $x$ e $y$, sempre geram <i>algum</i> plano quando as parciais existem, mas ele nada diz sobre as demais direções. Em $f_3$ na origem, os dois cortes são horizontais e o plano $z=0$ os contém, porém a superfície sai dele na diagonal.</p></div>
+</section>
+
+<section class="q">
+  <h2>Verificação e execução</h2>
+  <ul>
+    <li><b>Conferência simbólica:</b> <code>verify.py</code> passou nas 62 verificações (imagens, limites, quocientes de erro, planos, produto vetorial).</li>
+    <li><b>Executar:</b> abrir <code>index.html</code> no navegador. Para a verificação: <code>python3 -m venv .venv &amp;&amp; .venv/bin/pip install sympy &amp;&amp; .venv/bin/python verify.py</code>.</li>
+    <li><b>Limites:</b> os gráficos mostram o comportamento próximo à origem, mas só as demonstrações acima concluem.</li>
+  </ul>
+</section>
+
+</div>
+<script src="../vendor/katex/katex.min.js"></script>
+<script src="../vendor/katex/auto-render.min.js"></script>
+<script>
+  renderMathInElement(document.body, { delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }], throwOnError: false });
+  document.documentElement.dataset.ready = "1";
+</script>
+</body>
+</html>
