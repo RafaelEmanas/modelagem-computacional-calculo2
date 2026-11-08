@@ -1,0 +1,6 @@
+# ambientes e artefatos locais
+.venv/
+.venv-*/
+__pycache__/
+.playwright-cli/
+.DS_Store
