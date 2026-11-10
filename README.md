@@ -10,7 +10,7 @@ Integrantes: Rafael Emanuel, Luiz Nery, Antonio Lucas,
 Breno Augusto, Caio Martins, Victor Kossmann e Vitor Hugo. Estão na abertura de `index.html` e no topo de
 `relatorio/relatorio.html` (`id="meta-integrantes"`). Se mudar algo, altere os dois e gere o PDF de novo.
 
-## Como abrir o trabalho (passo a passo, sem precisar saber programar)
+## Como abrir o trabalho
 
 Você só precisa de um computador com internet para **baixar** os arquivos e de um navegador (Chrome, Edge
 ou Firefox). Depois de baixado, o trabalho funciona **sem internet** e não exige instalar nada.
