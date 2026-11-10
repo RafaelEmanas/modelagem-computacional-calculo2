@@ -56,7 +56,7 @@ Dentro da pasta extraída, abra a pasta `relatorio` e dê dois cliques em `Relat
 | Os gráficos não aparecem ou a página fica em branco | Abra o mesmo `index.html` em outro navegador (Chrome ou Edge) e confirme que o JavaScript não está bloqueado. |
 | O botão **Download ZIP** não aparece | Confirme que está na página inicial do repositório (não em um arquivo dentro dele) e clique no botão verde **Code**. |
 
-## Para quem é da área (opcional)
+## Como rodar num servidor local
 
 **Servidor local.** Se algum navegador bloquear arquivos locais, rode `python3 -m http.server` na pasta do
 projeto e abra `http://localhost:8000`. Os scripts são clássicos (sem módulos ES) e Plotly, KaTeX e as fontes
